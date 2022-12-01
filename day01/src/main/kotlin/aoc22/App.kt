@@ -9,7 +9,7 @@ fun main() {
                 if (i.isBlank()) {
                     add(0u)
                 } else {
-                    add(removeLast() + i.toUInt())
+                    this[size - 1] += i.toUInt()
                 }
             }
         }
