@@ -8,5 +8,5 @@
  * This project uses @Incubating APIs which are subject to change.
  */
 
-rootProject.name = "aoc22"
-include("day01")
+rootProject.name = "Advent of Code 2022"
+include("day01", "day02")
