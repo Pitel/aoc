@@ -4,7 +4,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
 
-
 suspend fun main() = coroutineScope {
     val input = object {}.javaClass.getResource("/input.txt")!!
         .readText()
