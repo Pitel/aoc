@@ -1,5 +1,8 @@
 package aoc22
 
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import kotlin.math.abs
 
 fun reconstructPath(
@@ -68,7 +71,7 @@ fun aStar(
     return null
 }
 
-fun main() {
+suspend fun main() = coroutineScope {
     lateinit var start: Pair<Int, Int>
     lateinit var end: Pair<Int, Int>
     val input = object {}.javaClass.getResource("/input.txt")!!
@@ -106,13 +109,15 @@ fun main() {
     )
     println(
         input.flatMapIndexed{ i, row ->
-            row.mapIndexedNotNull { j, c ->
-                if (c == 'a') {
-                    aStar(input, i to j, end, ::h)?.size?.dec()
-                } else {
-                    null
+            row.mapIndexed { j, c ->
+                async {
+                    if (c == 'a') {
+                        aStar(input, i to j, end, ::h)?.size?.dec()
+                    } else {
+                        null
+                    }
                 }
             }
-        }.min()
+        }.awaitAll().filterNotNull().min()
     )
 }
