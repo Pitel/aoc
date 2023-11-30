@@ -1,4 +1,4 @@
-package aoc22
+package aoc
 
 fun main() {
     val input = object {}.javaClass.getResource("/input.txt")!!
