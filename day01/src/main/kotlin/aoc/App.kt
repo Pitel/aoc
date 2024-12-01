@@ -3,18 +3,15 @@ package aoc
 import kotlin.math.abs
 
 fun main() {
-    val left = mutableListOf<Int>()
-    val right = mutableListOf<Int>()
-
-    object {}.javaClass.getResource("/input.txt")!!
+    val (left, right) = object {}.javaClass.getResource("/input.txt")!!
         .readText()
         .lineSequence()
         .filterNot { it.isBlank() }
-        .forEach {
-            val l = it.split("   ").map { it.toInt() }
-            left += l.first()
-            right += l.last()
-        }
+        .map {
+            val l = it.split("   ")
+                .map { it.toInt() }
+            l.first() to l.last()
+        }.unzip()
 
     println(
         left.sorted().zip(right.sorted()) { l, r -> abs(l - r) }.sum()
