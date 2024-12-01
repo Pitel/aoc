@@ -1,28 +1,27 @@
 package aoc
 
+import kotlin.math.abs
+
 fun main() {
     val input = object {}.javaClass.getResource("/input.txt")!!
         .readText()
         .lineSequence()
         .filterNot { it.isBlank() }
 
-    fun Sequence<String>.magic() =
-        map { l -> l.mapNotNull { c -> c.digitToIntOrNull() } }.sumOf { 10 * it.first() + it.last() }
+    val left = mutableListOf<Int>()
+    val right = mutableListOf<Int>()
 
-    println(input.magic())
+    input.forEach {
+        val l = it.split("   ").map { it.toInt() }
+        left += l.first()
+        right += l.last()
+    }
 
     println(
-        input.map {
-            it
-                .replace("one", "o1e")
-                .replace("two", "t2o")
-                .replace("three", "t3e")
-                .replace("four", "f4r")
-                .replace("five", "f5e")
-                .replace("six", "s6x")
-                .replace("seven", "s7n")
-                .replace("eight", "e8t")
-                .replace("nine", "n9e")
-        }.magic()
+        left.sorted().zip(right.sorted()) { l, r -> abs(l - r) }.sum()
+    )
+
+    println(
+        left.sumOf { l -> l * right.count { r -> l == r } }
     )
 }
