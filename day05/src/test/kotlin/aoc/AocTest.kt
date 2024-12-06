@@ -46,5 +46,5 @@ class AocTest : StringSpec({
     }
 
     "Part 1" { Solution.part1 shouldBe 143 }
-    "Part 2" { Solution.part2 shouldBe 143 }
+    "Part 2" { Solution.part2.await() shouldBe 123 }
 })
