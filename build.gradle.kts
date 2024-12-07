@@ -19,7 +19,7 @@ allprojects {
     }
 
     application {
-        mainClass.set("aoc.AppKt")
+        mainClass = "aoc.AppKt"
     }
 
     tasks.withType<Test>().configureEach {
