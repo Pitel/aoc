@@ -7,17 +7,18 @@ import kotlinx.coroutines.awaitAll
 
 @OptIn(DelicateCoroutinesApi::class)
 class Solution(resName: String = "input") {
-    val input = object {}.javaClass.getResource("/$resName.txt")!!.readText().lines().filter { !it.isEmpty() }.map {
-        it.map {
-            try {
-                it.digitToInt().toByte()
-            } catch (iae: IllegalArgumentException) {
-                Byte.MIN_VALUE
+    private val input = object {}.javaClass.getResource("/$resName.txt")!!.readText().lines().filter { !it.isEmpty() }
+        .map {
+            it.map {
+                try {
+                    it.digitToInt().toByte()
+                } catch (iae: IllegalArgumentException) {
+                    Byte.MIN_VALUE
+                }
             }
         }
-    }
 
-    val starts = buildSet {
+    private val starts = buildSet {
         input.forEachIndexed { y, row ->
             row.forEachIndexed { x, byte ->
                 if (byte == (0.toByte())) {
@@ -27,7 +28,7 @@ class Solution(resName: String = "input") {
         }
     }
 
-    fun walk(
+    private fun walk(
         tops: MutableCollection<Pair<Int, Int>>,
         points: MutableCollection<Pair<Int, Int>>
     ): Int {
