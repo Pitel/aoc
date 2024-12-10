@@ -26,49 +26,37 @@ class Solution(resName: String = "input") {
         }
     }
 
+    fun walk(
+        tops: MutableCollection<Pair<Int, Int>>,
+        points: MutableCollection<Pair<Int, Int>>
+    ): Int {
+        while (points.isNotEmpty()) {
+            val point = points.first()
+            points -= point
+            val x = point.first
+            val y = point.second
+            val height = input[y][x]
+            if (height == 9.toByte()) {
+                tops += point
+            } else {
+                input.getOrNull(y + 1)?.getOrNull(x)?.let { if (it == height.inc()) points += x to y + 1 }
+                input.getOrNull(y - 1)?.getOrNull(x)?.let { if (it == height.inc()) points += x to y - 1 }
+                input.getOrNull(y)?.getOrNull(x + 1)?.let { if (it == height.inc()) points += x + 1 to y }
+                input.getOrNull(y)?.getOrNull(x - 1)?.let { if (it == height.inc()) points += x - 1 to y }
+            }
+        }
+        return tops.size
+    }
+
     val part1 = starts.map {
         GlobalScope.async {
-            val tops = mutableSetOf<Pair<Int, Int>>()
-            val points = mutableSetOf(it)
-            while (points.isNotEmpty()) {
-                val point = points.first()
-                points -= point
-                val x = point.first
-                val y = point.second
-                val height = input[y][x]
-                if (height == 9.toByte()) {
-                    tops += point
-                } else {
-                    input.getOrNull(y + 1)?.getOrNull(x)?.let { if (it == height.inc()) points += x to y + 1 }
-                    input.getOrNull(y - 1)?.getOrNull(x)?.let { if (it == height.inc()) points += x to y - 1 }
-                    input.getOrNull(y)?.getOrNull(x + 1)?.let { if (it == height.inc()) points += x + 1 to y }
-                    input.getOrNull(y)?.getOrNull(x - 1)?.let { if (it == height.inc()) points += x - 1 to y }
-                }
-            }
-            tops.size
+            walk(mutableSetOf<Pair<Int, Int>>(), mutableSetOf(it))
         }
     }
 
     val part2 = starts.map {
         GlobalScope.async {
-            val tops = mutableListOf<Pair<Int, Int>>()
-            val points = mutableListOf(it)
-            while (points.isNotEmpty()) {
-                val point = points.first()
-                points -= point
-                val x = point.first
-                val y = point.second
-                val height = input[y][x]
-                if (height == 9.toByte()) {
-                    tops += point
-                } else {
-                    input.getOrNull(y + 1)?.getOrNull(x)?.let { if (it == height.inc()) points += x to y + 1 }
-                    input.getOrNull(y - 1)?.getOrNull(x)?.let { if (it == height.inc()) points += x to y - 1 }
-                    input.getOrNull(y)?.getOrNull(x + 1)?.let { if (it == height.inc()) points += x + 1 to y }
-                    input.getOrNull(y)?.getOrNull(x - 1)?.let { if (it == height.inc()) points += x - 1 to y }
-                }
-            }
-            tops.size
+            walk(mutableListOf<Pair<Int, Int>>(), mutableListOf(it))
         }
     }
 }
