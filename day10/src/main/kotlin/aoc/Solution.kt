@@ -3,6 +3,7 @@ package aoc
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 
 @OptIn(DelicateCoroutinesApi::class)
 class Solution(resName: String = "input") {
@@ -48,15 +49,15 @@ class Solution(resName: String = "input") {
         return tops.size
     }
 
-    val part1 = starts.map {
+    suspend fun part1() = starts.map {
         GlobalScope.async {
             walk(mutableSetOf<Pair<Int, Int>>(), mutableSetOf(it))
         }
-    }
+    }.awaitAll().sum()
 
-    val part2 = starts.map {
+    suspend fun part2() = starts.map {
         GlobalScope.async {
             walk(mutableListOf<Pair<Int, Int>>(), mutableListOf(it))
         }
-    }
+    }.awaitAll().sum()
 }
