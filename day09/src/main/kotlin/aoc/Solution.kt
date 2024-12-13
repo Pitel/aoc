@@ -4,13 +4,13 @@ class Solution(resName: String = "input") {
     val input = object {}.javaClass.getResource("/$resName.txt")!!
         .readText().trim().map { it.digitToInt() }
 
-    val windowed = input.windowed(2, 2, true)
+    val chunked = input.chunked(2)
 
     val disk = IntArray(input.sum()) { FREE }
 
     init {
         var offset = 0
-        windowed.forEachIndexed { i, pair ->
+        chunked.forEachIndexed { i, pair ->
             val file = pair.first()
             val free = pair.getOrElse(1) { 0 }
             repeat(file) { disk[offset + it] = i }
@@ -32,8 +32,8 @@ class Solution(resName: String = "input") {
     }
 
     fun defrag2() {
-        windowed.indices.reversed().forEach { i ->
-            val size = windowed[i].first()
+        chunked.indices.reversed().forEach { i ->
+            val size = chunked[i].first()
             val fileStart = disk.indexOfFirst { it == i }
             val freeStart = disk.asList().windowed(size).indexOfFirst { it.all { it == FREE } }
             if (freeStart != -1 && fileStart > freeStart) {
