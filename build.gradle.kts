@@ -22,7 +22,8 @@ allprojects {
         mainClass = "aoc.AppKt"
     }
 
-    tasks.withType<Test>().configureEach {
+    tasks.test {
         useJUnitPlatform()
+        testLogging.showStandardStreams = true
     }
 }
