@@ -1,6 +1,6 @@
 package aoc
 
-fun main() {
+suspend fun main() {
     println(Solution().part1)
-    println(Solution().part2)
+    println(Solution().part2())
 }

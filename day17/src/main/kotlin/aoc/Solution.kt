@@ -1,91 +1,31 @@
 package aoc
 
-import kotlin.math.pow
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 
-class Solution(resName: String = "input") {
-    val input = object {}.javaClass.getResource("/$resName.txt")!!.readText()
-        .lines()
-        .filter { it.isNotEmpty() }
+class Solution(private val resName: String = "input") {
+    val part1 by lazy { Computer().run() }
 
-    var a = 0
-    var b = 0
-    var c = 0
-    val program = input.last().split(' ').last().split(',').map { it.toInt() }
-    var ip = 0
-
-    fun reset() {
-        a = input[0].split(' ').last().toInt()
-        b = input[1].split(' ').last().toInt()
-        c = input[2].split(' ').last().toInt()
-        ip = 0
-    }
-
-    init {
-        reset()
-    }
-
-    val Int.combo get() = when (this) {
-        0, 1, 2, 3 -> this
-        4 -> a
-        5 -> b
-        6 -> c
-        7 -> TODO("Reserved")
-        else -> throw IllegalArgumentException("Combo must be 0-7")
-    }
-
-    fun step(): Int? = when (Opcode.entries[program[ip]]) {
-        Opcode.ADV -> {
-            a /= 2.0.pow(program[ip + 1].combo).toInt()
-            null
-        }
-        Opcode.BXL -> {
-            b = b xor program[ip + 1]
-            null
-        }
-        Opcode.BST -> {
-            b = program[ip + 1].combo % 8
-            null
-        }
-        Opcode.JNZ -> {
-            if (a != 0) {
-                ip = program[ip + 1] - 2 // -2 to counter the increase
+    suspend fun part2() = coroutineScope {
+        var found = MutableStateFlow(Int.MIN_VALUE)
+        val f = flow {
+            var i = 0
+            while (found.value == Int.MIN_VALUE) {
+                emit(i++)
             }
-            null
         }
-        Opcode.BXC -> {
-            b = b xor c
-            null
+        repeat(Runtime.getRuntime().availableProcessors()) {
+            f.onEach {
+                val c = Computer(resName).apply { a = it }
+                if (c.run() == c.program.joinToString(",")) {
+                    found.value = it
+                }
+            }.launchIn(this)
         }
-        Opcode.OUT -> program[ip + 1].combo % 8
-        Opcode.BDV -> {
-            b = a / 2.0.pow(program[ip + 1].combo).toInt()
-            null
-        }
-        Opcode.CDV -> {
-            c = a / 2.0.pow(program[ip + 1].combo).toInt()
-            null
-        }
-    }.also { ip += 2 }
-
-    fun run() = buildList {
-        try {
-            while (true) {
-                step()?.let { add(it) }
-            }
-        } catch (e: IndexOutOfBoundsException) {
-            // Halt
-        }
-    }.joinToString(",")
-
-    val part1 by lazy { run() }
-    val part2 by lazy {
-        var i = 0
-        while (true) {
-            reset()
-            a = i
-            if (run() == program.joinToString(",")) break
-            i++
-        }
-        i
+        found.first { it != Int.MIN_VALUE }
     }
 }

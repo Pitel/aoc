@@ -9,6 +9,6 @@ class AocTest : StringSpec({
     }
 
     "Part 2" {
-        Solution("2024").part2 shouldBe 117440
+        Solution("2024").part2() shouldBe 117440
     }
 })
