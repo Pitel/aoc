@@ -1,7 +1,5 @@
 package aoc
 
-import kotlin.math.abs
-
 fun main() {
     val input = object {}.javaClass.getResource("/input.txt")!!
         .readText()
