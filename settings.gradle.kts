@@ -1,2 +1,2 @@
-rootProject.name = "Advent of Code 2024"
-include(List(24) { "day" + "$it".padStart(2, '0') })
+rootProject.name = "Advent of Code"
+include(List(1) { "day" + "${it.inc()}".padStart(2, '0') })
