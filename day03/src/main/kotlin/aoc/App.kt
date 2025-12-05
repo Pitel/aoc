@@ -1,19 +1,18 @@
 package aoc
 
-fun List<Int>.jolts(batteries: Int): Int {
-    val jolts = StringBuilder(2)
+fun List<Int>.jolts(batteries: Int): Long {
+    val jolts = StringBuilder(batteries)
 
     var digits = this
-    println(digits)
-    var max = if (digits.size > 1) digits.dropLast(1).max() else digits.last()
-    jolts.append(max)
+    repeat(batteries) { bat ->
+        val tail = batteries - bat - 1
+        val max = digits.dropLast(tail).max()
+        println("$bat ($tail): $digits > $max")
+        jolts.append(max)
+        digits = digits.dropWhile { it != max }.drop(1)
+    }
 
-    digits = digits.dropWhile { it != max }.drop(1)
-    println(digits)
-    max = digits.max()
-    jolts.append(max)
-
-    return "$jolts".toInt()
+    return "$jolts".toLong()
 }
 
 fun main() {
@@ -22,6 +21,6 @@ fun main() {
         .lineSequence()
         .map { it.map { it.digitToInt() } }
 
-    println(input.map { it.jolts }.sum())
-//    println(input.sumOf { it.invalids2.sum() })
+    println(input.map { it.jolts(2) }.sum())
+    println(input.map { it.jolts(12) }.sum())
 }
